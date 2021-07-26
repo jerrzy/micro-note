@@ -41,12 +41,14 @@ export function* addNoteCollectionAsync({ payload: { name, description } }) {
       name,
       description,
       create_date: today,
+      update_date: today,
     });
     yield put(
       insertNoteCollection({
         name,
         description,
         createDate: today,
+        updateDate: today,
         id: addedObj.id,
       })
     );
@@ -55,6 +57,7 @@ export function* addNoteCollectionAsync({ payload: { name, description } }) {
         name,
         description,
         createDate: today,
+        updateDate: today,
         id: addedObj.id,
       })
     );
@@ -90,15 +93,18 @@ export function* editNoteCollectionAsync({
     if (!snapshot.exists) {
       yield put(addNoteCollectionFailure(`Note Collection ${name} not found.`));
     } else {
+      const today = new Date();
       yield noteCollectionRef.update({
         name: newName,
         description: newDescription,
+        update_date: today,
       });
       yield put(
         updateNoteCollection({
           ...selectedCollection,
           name: newName,
           description: newDescription,
+          updateDate: today,
         })
       );
       yield put(
@@ -106,6 +112,7 @@ export function* editNoteCollectionAsync({
           ...selectedCollection,
           name: newName,
           description: newDescription,
+          updateDate: today,
         })
       );
     }

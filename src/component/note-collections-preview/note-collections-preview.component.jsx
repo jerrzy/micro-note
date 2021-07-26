@@ -10,14 +10,9 @@ import {
 } from "../../redux/note-collection-crud/note-collection-crud.action";
 import { fetchNotesStart } from "../../redux/notes/notes.action";
 
-import {
-  NoteCollectionNameContainer,
-  NoteCollectionCreatedDays,
-  NoteCollectionIconBar,
-} from "./note-collections-preview.component.styles";
-import { getDaysFromToday } from "../../utils/date.util";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import CardHeaderDatesTile from "../card-view/card-header-dates-tile/card-header-dates-tile.component";
+import SelectableCard from "../card-view/selectable-card/selectable-card.component";
+import CardHeaderIconBar from "../card-view/card-header-icon-bar/card-header-icon-bar.component";
 
 class NoteCollectionsPreview extends React.Component {
   handleSelection = (event) => {
@@ -47,54 +42,41 @@ class NoteCollectionsPreview extends React.Component {
         </Alert>
       );
     } else {
-      return noteCollections.map(({ id, name, description, createDate }) => {
-        const style = {
-          bg: "light",
-          text: "dark",
-        };
-        if (selectedNoteCollection && selectedNoteCollection.id === id) {
-          style.bg = "success";
-          style.text = "white";
+      return noteCollections.map(
+        ({ id, name, description, createDate, updateDate }) => {
+          return (
+            <SelectableCard
+              isSelected={
+                selectedNoteCollection && selectedNoteCollection.id === id
+              }
+              id={id}
+              title={name}
+              handleSelect={this.handleSelection}
+              headerComponents={
+                <>
+                  <CardHeaderDatesTile
+                    createDate={createDate}
+                    updateDate={updateDate}
+                  />
+                  {selectedNoteCollection &&
+                  selectedNoteCollection.id === id ? (
+                    <CardHeaderIconBar
+                      handleDelete={() =>
+                        deleteNoteCollectionSendRequest(selectedNoteCollection)
+                      }
+                      handleUpdate={editNoteCollectionStart}
+                    />
+                  ) : null}
+                </>
+              }
+            >
+              <Card.Body>
+                <Card.Text>{description}</Card.Text>
+              </Card.Body>
+            </SelectableCard>
+          );
         }
-        const daysCreated = getDaysFromToday(createDate);
-        return (
-          <Card key={id} bg={style.bg} text={style.text} className="mb-2">
-            <Card.Header>
-              <NoteCollectionNameContainer
-                id={id}
-                onClick={this.handleSelection}
-              >
-                {name}
-              </NoteCollectionNameContainer>
-
-              <NoteCollectionCreatedDays>
-                {daysCreated === 0
-                  ? "Created today"
-                  : `Created ${daysCreated} ${
-                      daysCreated > 1 ? "days" : "day"
-                    } ago`}
-              </NoteCollectionCreatedDays>
-              {selectedNoteCollection && selectedNoteCollection.id === id ? (
-                <NoteCollectionIconBar>
-                  <FontAwesomeIcon
-                    icon={["far", "edit"]}
-                    onClick={editNoteCollectionStart}
-                  />
-                  <FontAwesomeIcon
-                    icon={["far", "trash-alt"]}
-                    onClick={() =>
-                      deleteNoteCollectionSendRequest(selectedNoteCollection)
-                    }
-                  />
-                </NoteCollectionIconBar>
-              ) : null}
-            </Card.Header>
-            <Card.Body>
-              <Card.Text>{description}</Card.Text>
-            </Card.Body>
-          </Card>
-        );
-      });
+      );
     }
   }
 }

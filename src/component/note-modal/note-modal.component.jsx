@@ -20,7 +20,8 @@ const config = {
   editor: {
     style: {
       padding: "10px",
-      height: "200px",
+      height: "300px",
+      overflow: "auto",
     },
   },
   toolbar: {
@@ -114,7 +115,17 @@ class NoteModal extends React.Component {
     const showModal = isUpdating || isAdding;
     return (
       <div>
-        <Modal backdrop="static" show={showModal} onHide={cancelAddNote}>
+        <Modal
+          dialogClassName="modal-lg"
+          backdrop="static"
+          show={showModal}
+          onHide={() => {
+            this.setState({
+              editorState: null,
+            });
+            cancelAddNote();
+          }}
+        >
           <Modal.Header closeButton>
             <Modal.Title>
               {isUpdating ? "Edit selected" : "Create new"} Note

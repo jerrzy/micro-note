@@ -1,40 +1,42 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Card, Alert } from "react-bootstrap";
-import { getDaysFromToday } from "../../utils/date.util";
+import { Alert } from "react-bootstrap";
 
 import {
+  selectNote,
   deleteNoteRequest,
   updateNoteStart,
 } from "../../redux/notes/notes.action";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { NoteIconBar, NoteCreatedDays } from "./notes-preview.component.styles";
+import CardHeaderIconBar from "../card-view/card-header-icon-bar/card-header-icon-bar.component";
+import { CardBodyContainer } from "./notes-preview.component.styles";
+
+import SelectableCard from "../card-view/selectable-card/selectable-card.component";
+import CardHeaderDatesTile from "../card-view/card-header-dates-tile/card-header-dates-tile.component";
 
 import parse from "html-react-parser";
 
 class NotesPreview extends React.Component {
-  handleDeleteNote = (event) => {
-    let noteIdToDelete = event.target.getAttribute("data-note-id");
-    if (!noteIdToDelete) {
-      noteIdToDelete = event.target.parentNode.getAttribute("data-note-id");
-    }
-    const { selectedNoteCollection, deleteNoteRequest } = this.props;
-    deleteNoteRequest(selectedNoteCollection.id, noteIdToDelete);
+  handleUpdateNote = () => {
+    const { selectedNote, updateNoteStart } = this.props;
+    updateNoteStart(selectedNote);
   };
 
-  handleUpdateNote = (event) => {
-    let noteId = event.target.getAttribute("data-note-id");
-    if (!noteId) {
-      noteId = event.target.parentNode.getAttribute("data-note-id");
-    }
-    const { notes, updateNoteStart } = this.props;
-    const noteToUpdate = notes.filter((note) => note.id === noteId);
-    updateNoteStart(noteToUpdate[0]);
+  handleSelectNote = (event) => {
+    const { notes, selectNote } = this.props;
+    const selectedNoteId = event.target.id;
+    const selectedNote = notes.filter((note) => note.id === selectedNoteId);
+    selectNote(selectedNote[0]);
   };
 
   render() {
-    const { notes, selectedNoteCollection } = this.props;
+    const {
+      notes,
+      selectedNoteCollection,
+      selectedNote,
+      deleteNoteRequest,
+      updateNoteStart,
+    } = this.props;
     if (!selectedNoteCollection) {
       return <Alert variant="info">Please select a Note Collection.</Alert>;
     }
@@ -42,31 +44,35 @@ class NotesPreview extends React.Component {
       return <Alert variant="info">This Collection is empty.</Alert>;
     } else {
       return notes.map((note) => {
-        const daysCreated = getDaysFromToday(note.createDate);
         return (
-          <Card key={note.id} className="mb-2">
-            <Card.Header>
-              {note.title}
-              <NoteCreatedDays>
-                {daysCreated === 0
-                  ? "Created Today"
-                  : `Created ${daysCreated} days ago`}
-              </NoteCreatedDays>
-              <NoteIconBar>
-                <FontAwesomeIcon
-                  icon={["far", "edit"]}
-                  data-note-id={note.id}
-                  onClick={this.handleUpdateNote}
+          <SelectableCard
+            isSelected={selectedNote && selectedNote.id === note.id}
+            id={note.id}
+            title={note.title}
+            handleSelect={this.handleSelectNote}
+            headerComponents={
+              <>
+                <CardHeaderDatesTile
+                  createDate={note.createDate}
+                  updateDate={note.updateDate}
                 />
-                <FontAwesomeIcon
-                  icon={["far", "trash-alt"]}
-                  data-note-id={note.id}
-                  onClick={this.handleDeleteNote}
-                />
-              </NoteIconBar>
-            </Card.Header>
-            <Card.Body>{parse(note.content)}</Card.Body>
-          </Card>
+
+                {selectedNote && selectedNote.id === note.id ? (
+                  <CardHeaderIconBar
+                    handleDelete={() =>
+                      deleteNoteRequest(
+                        this.props.selectedNoteCollection.id,
+                        this.props.selectedNote.id
+                      )
+                    }
+                    handleUpdate={() => updateNoteStart(selectedNote)}
+                  />
+                ) : null}
+              </>
+            }
+          >
+            <CardBodyContainer>{parse(note.content)}</CardBodyContainer>
+          </SelectableCard>
         );
       });
     }
@@ -75,10 +81,12 @@ class NotesPreview extends React.Component {
 
 const mapStateToProps = (state) => ({
   selectedNoteCollection: state.noteCollectionCRUD.selectedNoteCollection,
+  selectedNote: state.notes.selectedNote,
   notes: state.notes.notes,
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  selectNote: (selectedNote) => dispatch(selectNote(selectedNote)),
   deleteNoteRequest: (selectedNoteCollection, selectedNoteId) =>
     dispatch(deleteNoteRequest(selectedNoteCollection, selectedNoteId)),
   updateNoteStart: (note) => dispatch(updateNoteStart(note)),

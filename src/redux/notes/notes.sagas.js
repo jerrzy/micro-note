@@ -25,6 +25,7 @@ export function* fetchNotesAsync({ payload: { id, name } }) {
         return {
           id: doc.id,
           createDate: docData.create_date,
+          updateDate: docData.update_date,
           title: docData.title,
           content: docData.content,
         };
@@ -57,12 +58,14 @@ export function* addNoteAsync({
         title,
         content,
         create_date: today,
+        update_date: today,
       });
     yield put(
       addNoteSuccess({
         title,
         content,
         createDate: today,
+        updateDate: today,
         id: addedObj.id,
       })
     );
@@ -107,6 +110,7 @@ function* updateNoteAsync({
       yield put(cancelNote());
       return;
     }
+    const today = new Date();
     yield firestore
       .collection("default")
       .doc(`${noteCollectionId}`)
@@ -115,12 +119,14 @@ function* updateNoteAsync({
       .update({
         title: newTitle,
         content: newContent,
+        update_date: today,
       });
     yield put(
       updateNoteSuccess({
         ...note,
         title: newTitle,
         content: newContent,
+        update_date: today,
       })
     );
   } catch (error) {

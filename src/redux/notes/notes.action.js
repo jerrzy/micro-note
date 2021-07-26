@@ -15,10 +15,10 @@ export const fetchNotesFailure = (errorMessage) => ({
   payload: errorMessage,
 });
 
-// export const selectNote = (selectedNote) => ({
-//   type: NotesActionTypes.SELECT_NOTE,
-//   palyload: selectedNote,
-// });
+export const selectNote = (selectedNote) => ({
+  type: NotesActionTypes.SELECT_NOTE,
+  payload: selectedNote,
+});
 
 export const addNoteStart = () => ({
   type: NotesActionTypes.ADD_NOTE_START,

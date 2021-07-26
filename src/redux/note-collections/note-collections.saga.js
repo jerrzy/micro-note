@@ -19,6 +19,7 @@ export function* fetchNoteCollectionsAsync() {
         return {
           id: doc.id,
           createDate: docData.create_date,
+          updateDate: docData.update_date,
           name: docData.name,
           description: docData.description,
         };

@@ -31,14 +31,14 @@ export const NotesReducer = (state = INITIAL_STATE, action) => {
         isUpdating: false,
         errorMessage: action.payload,
       };
-    // case NotesActionTypes.SELECT_NOTE:
-    //   return {
-    //     ...state,
-    //     isFetching: false,
-    //     isAdding: false,
-    //     isUpdating: false,
-    //     selectedNote: action.payload,
-    //   };
+    case NotesActionTypes.SELECT_NOTE:
+      return {
+        ...state,
+        isFetching: false,
+        isAdding: false,
+        isUpdating: false,
+        selectedNote: action.payload,
+      };
     case NotesActionTypes.ADD_NOTE_FAILURE:
       return {
         ...state,
@@ -107,7 +107,6 @@ export const NotesReducer = (state = INITIAL_STATE, action) => {
         isAdding: false,
         isUpdating: false,
         isDeleting: false,
-        selectedNote: null,
       };
     case NotesActionTypes.DELETE_NOTE_REQUEST:
       return {
@@ -115,11 +114,12 @@ export const NotesReducer = (state = INITIAL_STATE, action) => {
       };
     case NotesActionTypes.DELETE_NOTE_SUCCESS:
       const notesAfterDeleting = state.notes.filter((note) => {
-        return note.id === action.payload.id;
+        return note.id !== action.payload;
       });
       return {
         ...state,
         notes: notesAfterDeleting,
+        selectedNote: null,
       };
     case NotesActionTypes.DELETE_NOTE_FAILURE:
       return {
