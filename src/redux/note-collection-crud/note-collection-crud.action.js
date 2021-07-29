@@ -79,3 +79,18 @@ export const deleteNoteCollectionFailure = (errorMessage) => ({
   type: NoteCollectionCRUDActionTypes.DELETE_NOTE_COLLECTION_FAILURE,
   payload: errorMessage,
 });
+
+export const pinSelectedNoteCollection = (noteCollection) => ({
+  type: NoteCollectionCRUDActionTypes.PIN_SELECTED_NOTE_COLLECTION,
+  payload: noteCollection,
+});
+
+export const unpinSelectedNoteCollection = (noteCollection) => ({
+  type: NoteCollectionCRUDActionTypes.UNPIN_SELECTED_NOTE_COLLECTION,
+  payload: noteCollection,
+});
+
+export const pinNoteCollectionFailure = (errorMessage) => ({
+  type: NoteCollectionCRUDActionTypes.PIN_NOTE_COLLECTION_FAILURE,
+  payload: errorMessage,
+});

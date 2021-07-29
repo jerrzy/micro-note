@@ -15,17 +15,21 @@ export function* fetchNoteCollectionsAsync() {
     const noteCollections = yield call(() => {
       return snapshot.docs.map((doc) => {
         const docData = doc.data();
-        console.log(docData);
         return {
           id: doc.id,
           createDate: docData.create_date,
           updateDate: docData.update_date,
+          deleteDate: docData.delete_date,
           name: docData.name,
           description: docData.description,
+          isPinned: docData.is_pinned ? docData.is_pinned : false,
         };
       });
     });
-    yield put(fetchNoteCollectionsSuccess(noteCollections));
+    const validNoteCollections = noteCollections.filter(
+      (collection) => !collection.deleteDate
+    );
+    yield put(fetchNoteCollectionsSuccess(validNoteCollections));
   } catch (error) {
     yield put(fetchNoteCollectionsFailure(error.message));
   }

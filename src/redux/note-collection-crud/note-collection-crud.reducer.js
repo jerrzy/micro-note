@@ -57,6 +57,12 @@ const noteCollectionCRUDReducer = (state = INITIAL_STATE, action) => {
         showModal: true,
         errorMessage: action.payload,
       };
+    case NoteCollectionCRUDActionTypes.PIN_NOTE_COLLECTION_FAILURE:
+      return {
+        ...state,
+        showModal: false,
+        errorMessage: action.payload,
+      };
     case NoteCollectionCRUDActionTypes.DELETE_NOTE_COLLECTION_SEND_REQUEST:
       // no need to set payload here, data returned goes to the component as state.
       return {
@@ -66,6 +72,26 @@ const noteCollectionCRUDReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         errorMessage: action.payload,
+      };
+    case NoteCollectionCRUDActionTypes.PIN_SELECTED_NOTE_COLLECTION:
+      const selectedNoteCollectionToPin = {
+        ...action.payload,
+        isPinned: true,
+      };
+      // selectedNoteCollectionToPin.isPinned = true;
+      return {
+        ...state,
+        selectedNoteCollection: selectedNoteCollectionToPin,
+      };
+    case NoteCollectionCRUDActionTypes.UNPIN_SELECTED_NOTE_COLLECTION:
+      const selectedNoteCollectionToUnpin = {
+        ...action.payload,
+        isPinned: false,
+      };
+      // selectedNoteCollectionToUnpin.isPinned = false;
+      return {
+        ...state,
+        selectedNoteCollection: selectedNoteCollectionToUnpin,
       };
     default:
       return {

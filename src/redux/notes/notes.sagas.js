@@ -26,12 +26,15 @@ export function* fetchNotesAsync({ payload: { id, name } }) {
           id: doc.id,
           createDate: docData.create_date,
           updateDate: docData.update_date,
+          deleteDate: docData.delete_date,
           title: docData.title,
           content: docData.content,
+          isPinned: docData.is_pinned,
         };
       });
     });
-    yield put(fetchNotesSuccess(notes));
+    const validNotes = notes.filter((note) => !note.deleteDate);
+    yield put(fetchNotesSuccess(validNotes));
   } catch (error) {
     yield put(fetchNotesFailure(error.message));
   }
@@ -59,6 +62,7 @@ export function* addNoteAsync({
         content,
         create_date: today,
         update_date: today,
+        is_pinned: false,
       });
     yield put(
       addNoteSuccess({
@@ -67,6 +71,7 @@ export function* addNoteAsync({
         createDate: today,
         updateDate: today,
         id: addedObj.id,
+        is_pinned: false,
       })
     );
   } catch (error) {
@@ -91,7 +96,15 @@ function* deleteNoteAsync({
       .doc(`${selectedNoteCollectionId}`)
       .collection("notes")
       .doc(`${selectedNoteId}`)
-      .delete();
+      .update({
+        delete_date: new Date(),
+      });
+    // yield firestore
+    //   .collection("default")
+    //   .doc(`${selectedNoteCollectionId}`)
+    //   .collection("notes")
+    //   .doc(`${selectedNoteId}`)
+    //   .delete();
     yield put(deleteNoteSuccess(selectedNoteId));
   } catch (error) {
     yield put(deleteNoteFailure(error.message));

@@ -1,9 +1,12 @@
 import { Card } from "react-bootstrap";
 
-import { TitleContainer } from "./selectable-card.component.styles";
+import {
+  TitleContainer,
+  PinIconContainer,
+} from "./selectable-card.component.styles";
 
 const SelectableCard = (props) => {
-  const { isSelected, id, title, handleSelect } = props;
+  const { isSelected, id, title, isPinned, handleSelect } = props;
   const style = {
     bg: "light",
     text: "dark",
@@ -17,6 +20,7 @@ const SelectableCard = (props) => {
       <Card.Header>
         <TitleContainer id={id} onClick={handleSelect}>
           {title}
+          {isPinned ? <PinIconContainer /> : null}
         </TitleContainer>
         {props.headerComponents}
       </Card.Header>

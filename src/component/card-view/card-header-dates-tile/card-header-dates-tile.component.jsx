@@ -5,7 +5,7 @@ import {
   NoteCollectionDetailContainer,
 } from "./card-header-dates-tile.styles";
 
-const CardHeaderDatesTile = ({ createDate, updateDate }) => {
+const CardHeaderDatesTile = ({ createDate, updateDate, ...props }) => {
   const daysCreated = getDaysFromToday(createDate);
   const daysUpdated = updateDate ? getDaysFromToday(updateDate) : null;
   return (
@@ -22,6 +22,7 @@ const CardHeaderDatesTile = ({ createDate, updateDate }) => {
             : `Updated ${daysUpdated} ${daysUpdated > 1 ? "days" : "day"} ago`
           : ""}
       </NoteCollectionCreatedDays>
+      {props.children}
     </NoteCollectionDetailContainer>
   );
 };

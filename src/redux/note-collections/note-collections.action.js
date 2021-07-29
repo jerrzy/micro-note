@@ -28,3 +28,13 @@ export const deleteNoteCollection = (noteCollection) => ({
   type: NoteCollectionsActions.DELETE_NOTE_COLLECTION,
   payload: noteCollection,
 });
+
+export const pinNoteCollection = (noteCollection) => ({
+  type: NoteCollectionsActions.PIN_NOTE_COLLECTION,
+  payload: noteCollection,
+});
+
+export const unPinNoteCollection = (noteCollection) => ({
+  type: NoteCollectionsActions.UNPIN_NOTE_COLLECTION,
+  payload: noteCollection,
+});

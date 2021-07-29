@@ -23,7 +23,6 @@ const Header = ({
   selectedNoteCollection,
   signOutStart,
   addNoteCollectionStart,
-  editNoteCollectionStart,
   addNoteStart,
 }) => {
   return (
@@ -33,7 +32,6 @@ const Header = ({
       </LogoContainer>
       {currentUser ? (
         <OptionsContainer>
-          <OptionLink to="/home">Collections</OptionLink>
           <OptionLink onClick={addNoteCollectionStart}>
             New Collection
           </OptionLink>
@@ -46,7 +44,7 @@ const Header = ({
           <OptionLink as="div" onClick={signOutStart}>
             Sign Out
           </OptionLink>
-          <OptionLink>Welcom {currentUser.display_name}</OptionLink>
+          <span>Welcom {currentUser.display_name}</span>
         </OptionsContainer>
       ) : (
         <OptionsContainer>

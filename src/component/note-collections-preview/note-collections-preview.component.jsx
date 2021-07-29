@@ -7,6 +7,8 @@ import {
   selectNoteCollection,
   editNoteCollectionStart,
   deleteNoteCollectionSendRequest,
+  pinSelectedNoteCollection,
+  unpinSelectedNoteCollection,
 } from "../../redux/note-collection-crud/note-collection-crud.action";
 import { fetchNotesStart } from "../../redux/notes/notes.action";
 
@@ -34,6 +36,8 @@ class NoteCollectionsPreview extends React.Component {
       selectedNoteCollection,
       editNoteCollectionStart,
       deleteNoteCollectionSendRequest,
+      pinSelectedNoteCollection,
+      unpinSelectedNoteCollection,
     } = this.props;
     if (noteCollections.length === 0) {
       return (
@@ -43,7 +47,7 @@ class NoteCollectionsPreview extends React.Component {
       );
     } else {
       return noteCollections.map(
-        ({ id, name, description, createDate, updateDate }) => {
+        ({ id, name, description, createDate, updateDate, isPinned }) => {
           return (
             <SelectableCard
               isSelected={
@@ -51,6 +55,7 @@ class NoteCollectionsPreview extends React.Component {
               }
               id={id}
               title={name}
+              isPinned={isPinned}
               handleSelect={this.handleSelection}
               headerComponents={
                 <>
@@ -65,6 +70,13 @@ class NoteCollectionsPreview extends React.Component {
                         deleteNoteCollectionSendRequest(selectedNoteCollection)
                       }
                       handleUpdate={editNoteCollectionStart}
+                      handlePin={() =>
+                        pinSelectedNoteCollection(selectedNoteCollection)
+                      }
+                      handleUnPin={() =>
+                        unpinSelectedNoteCollection(selectedNoteCollection)
+                      }
+                      isPinned={isPinned}
                     />
                   ) : null}
                 </>
@@ -86,10 +98,13 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(selectNoteCollection(selectedNoteCollection)),
   fetchNotesInCollection: (selectedNoteCollection) =>
     dispatch(fetchNotesStart(selectedNoteCollection)),
-  // pre-selecting a collection is not needed for editing
   editNoteCollectionStart: () => dispatch(editNoteCollectionStart()),
   deleteNoteCollectionSendRequest: (selectedNoteCollection) =>
     dispatch(deleteNoteCollectionSendRequest(selectedNoteCollection)),
+  pinSelectedNoteCollection: (selectedNoteCollection) =>
+    dispatch(pinSelectedNoteCollection(selectedNoteCollection)),
+  unpinSelectedNoteCollection: (selectedNoteCollection) =>
+    dispatch(unpinSelectedNoteCollection(selectedNoteCollection)),
 });
 
 const mapStateToProps = (state) => {

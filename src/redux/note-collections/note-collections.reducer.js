@@ -6,6 +6,17 @@ const INITIAL_STATE = {
   errorMessage: "",
 };
 
+const reOrderNoteCollections = (noteCollections) => {
+  const pinnedCollections = noteCollections.filter(
+    (collection) => collection.isPinned
+  );
+  const unpinnedCollections = noteCollections.filter(
+    (collection) => !collection.isPinned
+  );
+
+  return [...pinnedCollections, ...unpinnedCollections];
+};
+
 const noteCollectionsReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case NoteCollectionsActions.FETCH_NOTE_COLLECTIONS_START:
@@ -55,6 +66,26 @@ const noteCollectionsReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         noteCollections: [...deletedNoteCollections],
+      };
+    case NoteCollectionsActions.PIN_NOTE_COLLECTION:
+      const noteCollectionToPin = state.noteCollections.find(
+        (collection) => collection.id === action.payload.id
+      );
+      noteCollectionToPin.isPinned = true;
+      const noteCollections = reOrderNoteCollections(state.noteCollections);
+      return {
+        ...state,
+        noteCollections: [...noteCollections],
+      };
+    case NoteCollectionsActions.UNPIN_NOTE_COLLECTION:
+      const noteCollectionToUnPin = state.noteCollections.find(
+        (collection) => collection.id === action.payload.id
+      );
+      noteCollectionToUnPin.isPinned = false;
+      const noteCollections2 = reOrderNoteCollections(state.noteCollections);
+      return {
+        ...state,
+        noteCollections: [...noteCollections2],
       };
     default:
       return state;

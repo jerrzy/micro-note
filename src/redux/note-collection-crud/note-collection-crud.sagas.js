@@ -7,6 +7,7 @@ import {
   addNoteCollectionFailure,
   deleteNoteCollectionFailure,
   noteCollectionCRUDCancel,
+  pinNoteCollectionFailure,
 } from "./note-collection-crud.action";
 import NoteCollectionCRUDActionTypes from "./note-collection-crud.action.types";
 
@@ -14,6 +15,8 @@ import {
   insertNoteCollection,
   updateNoteCollection,
   deleteNoteCollection,
+  pinNoteCollection,
+  unPinNoteCollection,
 } from "../note-collections/note-collections.action";
 
 export function* addNoteCollectionAsync({ payload: { name, description } }) {
@@ -42,6 +45,7 @@ export function* addNoteCollectionAsync({ payload: { name, description } }) {
       description,
       create_date: today,
       update_date: today,
+      isPinned: false,
     });
     yield put(
       insertNoteCollection({
@@ -50,6 +54,7 @@ export function* addNoteCollectionAsync({ payload: { name, description } }) {
         createDate: today,
         updateDate: today,
         id: addedObj.id,
+        isPinned: false,
       })
     );
     yield put(
@@ -59,6 +64,7 @@ export function* addNoteCollectionAsync({ payload: { name, description } }) {
         createDate: today,
         updateDate: today,
         id: addedObj.id,
+        isPinned: false,
       })
     );
   } catch (error) {
@@ -121,6 +127,42 @@ export function* editNoteCollectionAsync({
   }
 }
 
+export function* pinNoteCollectionAsync({ payload }) {
+  yield handlePinNoteCollectionAsync(payload, true);
+}
+
+export function* unpinNoteCollectionAsync({ payload }) {
+  yield handlePinNoteCollectionAsync(payload, false);
+}
+
+function* handlePinNoteCollectionAsync(selectedCollection, isPin) {
+  try {
+    const { id, name } = selectedCollection;
+    const noteCollectionRef = firestore.doc(`default/${id}`);
+    const snapshot = yield noteCollectionRef.get();
+    if (!snapshot.exists) {
+      yield put(pinNoteCollectionFailure(`Note Collection ${name} not found.`));
+    } else {
+      yield noteCollectionRef.update({
+        is_pinned: isPin,
+      });
+      isPin
+        ? yield put(
+            pinNoteCollection({
+              ...selectedCollection,
+            })
+          )
+        : yield put(
+            unPinNoteCollection({
+              ...selectedCollection,
+            })
+          );
+    }
+  } catch (error) {
+    yield put(pinNoteCollectionFailure(error.message));
+  }
+}
+
 export function* deleteNoteCollectionAsync({ payload: noteCollection }) {
   try {
     const { id } = noteCollection;
@@ -132,7 +174,11 @@ export function* deleteNoteCollectionAsync({ payload: noteCollection }) {
       );
       return;
     }
-    yield firestore.doc(`default/${id}`).delete();
+    const noteCollectionRef = firestore.doc(`default/${id}`);
+    yield noteCollectionRef.update({
+      delete_date: new Date(),
+    });
+    // yield firestore.doc(`default/${id}`).delete();
     yield put(deleteNoteCollection(noteCollection));
     // yield put(deleteNoteCollectionSuccess(noteCollection));
   } catch (error) {
@@ -160,10 +206,27 @@ export function* deleteNoteCollectionStart() {
     deleteNoteCollectionAsync
   );
 }
+
+export function* pinNoteCollectionStart() {
+  yield takeLatest(
+    NoteCollectionCRUDActionTypes.PIN_SELECTED_NOTE_COLLECTION,
+    pinNoteCollectionAsync
+  );
+}
+
+export function* unpinNoteCollectionStart() {
+  yield takeLatest(
+    NoteCollectionCRUDActionTypes.UNPIN_SELECTED_NOTE_COLLECTION,
+    unpinNoteCollectionAsync
+  );
+}
+
 export function* NoteCollectionCRUDSagas() {
   yield all([
     call(addNoteCollectionStart),
     call(editNoteCollectionStart),
     call(deleteNoteCollectionStart),
+    call(pinNoteCollectionStart),
+    call(unpinNoteCollectionStart),
   ]);
 }

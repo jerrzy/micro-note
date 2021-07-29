@@ -1,7 +1,13 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { IconBar } from "./card-header-icon-bar.styles";
+import { IconBar, UnPinIcon, PinIcon } from "./card-header-icon-bar.styles";
 
-const CardHeaderIconBar = ({ handleUpdate, handleDelete }) => {
+const CardHeaderIconBar = ({
+  handleUpdate,
+  handleDelete,
+  handlePin,
+  handleUnPin,
+  isPinned,
+}) => {
   return (
     <IconBar>
       {handleUpdate ? (
@@ -9,6 +15,13 @@ const CardHeaderIconBar = ({ handleUpdate, handleDelete }) => {
       ) : null}
       {handleDelete ? (
         <FontAwesomeIcon icon={["far", "trash-alt"]} onClick={handleDelete} />
+      ) : null}
+      {handlePin ? (
+        isPinned ? (
+          <PinIcon onClick={handleUnPin} />
+        ) : (
+          <UnPinIcon onClick={handlePin} />
+        )
       ) : null}
     </IconBar>
   );
