@@ -7,6 +7,7 @@ const INITIAL_STATE = {
   isAdding: false,
   isUpdating: false,
   isDeleting: false,
+  isEditing: false,
   errorMessage: "",
 };
 
@@ -37,6 +38,7 @@ export const NotesReducer = (state = INITIAL_STATE, action) => {
         isFetching: false,
         isAdding: false,
         isUpdating: false,
+        isEditing: false,
         selectedNote: action.payload,
       };
     case NotesActionTypes.ADD_NOTE_FAILURE:
@@ -107,6 +109,7 @@ export const NotesReducer = (state = INITIAL_STATE, action) => {
         isAdding: false,
         isUpdating: false,
         isDeleting: false,
+        isEditing: false,
       };
     case NotesActionTypes.DELETE_NOTE_REQUEST:
       return {
@@ -128,6 +131,57 @@ export const NotesReducer = (state = INITIAL_STATE, action) => {
         isAdding: false,
         isUpdating: false,
         isDeleting: true,
+        errorMessage: action.payload,
+      };
+    case NotesActionTypes.EDIT_NOTE_START:
+      return {
+        ...state,
+        isFetching: false,
+        isEditing: true,
+        isUpdating: false,
+        isDeleting: false,
+        errorMessage: null,
+      };
+    case NotesActionTypes.EDIT_NOTE_REQUEST:
+      return {
+        ...state,
+        isFetching: false,
+        isEditing: true,
+        isUpdating: false,
+        isDeleting: false,
+        errorMessage: null,
+      };
+    case NotesActionTypes.EDIT_NOTE_SUCCESS:
+      // update notes
+      const updatedNotesForEditing = state.notes.map((note) => {
+        if (note.id === action.payload.id) {
+          return action.payload;
+        } else {
+          return note;
+        }
+      });
+      const updatedNote = {
+        ...state.selectedNote,
+        title: action.payload.title,
+        content: action.payload.content,
+      };
+      return {
+        ...state,
+        isFetching: false,
+        isEditing: false,
+        isUpdating: false,
+        isDeleting: false,
+        errorMessage: null,
+        notes: updatedNotesForEditing,
+        selectedNote: updatedNote,
+      };
+    case NotesActionTypes.EDIT_NOTE_FAILURE:
+      return {
+        ...state,
+        isFetching: false,
+        isEditing: true,
+        isUpdating: false,
+        isDeleting: false,
         errorMessage: action.payload,
       };
     default:

@@ -43,6 +43,7 @@ class NoteModal extends React.Component {
 
     this.state = {
       title: "",
+      editorState: null,
     };
   }
 

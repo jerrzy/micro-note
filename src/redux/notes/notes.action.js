@@ -97,3 +97,29 @@ export const deleteNoteFailure = (errorMessage) => ({
   type: NotesActionTypes.DELETE_NOTE_FAILURE,
   payload: errorMessage,
 });
+
+export const editNoteStart = () => {
+  return {
+    type: NotesActionTypes.EDIT_NOTE_START,
+  };
+};
+
+export const editNoteRequest = ({
+  noteCollectionId,
+  note,
+  newTitle,
+  newContent,
+}) => ({
+  type: NotesActionTypes.EDIT_NOTE_REQUEST,
+  payload: { noteCollectionId, note, newTitle, newContent },
+});
+
+export const editNoteSuccess = (note) => ({
+  type: NotesActionTypes.EDIT_NOTE_SUCCESS,
+  payload: note,
+});
+
+export const editNoteFailure = (errorMessage) => ({
+  type: NotesActionTypes.EDIT_NOTE_FAILURE,
+  payload: errorMessage,
+});

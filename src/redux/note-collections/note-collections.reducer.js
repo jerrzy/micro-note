@@ -28,7 +28,7 @@ const noteCollectionsReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isFetching: false,
-        noteCollections: action.payload,
+        noteCollections: reOrderNoteCollections(action.payload),
       };
     case NoteCollectionsActions.FETCH_NOTE_COLLECTIONS_FAILURE:
       return {

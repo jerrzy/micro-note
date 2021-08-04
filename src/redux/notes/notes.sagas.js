@@ -11,6 +11,8 @@ import {
   updateNoteSuccess,
   deleteNoteFailure,
   deleteNoteSuccess,
+  editNoteSuccess,
+  editNoteFailure,
   cancelNote,
 } from "./notes.action";
 
@@ -147,6 +149,42 @@ function* updateNoteAsync({
   }
 }
 
+function* editNoteAsync({
+  payload: { noteCollectionId, note, newTitle, newContent },
+}) {
+  try {
+    if (!note) {
+      yield put(editNoteFailure("Please select a Note to update"));
+      return;
+    }
+    if (note.title === newTitle && note.content === newContent) {
+      yield put(cancelNote());
+      return;
+    }
+    const today = new Date();
+    yield firestore
+      .collection("default")
+      .doc(`${noteCollectionId}`)
+      .collection("notes")
+      .doc(`${note.id}`)
+      .update({
+        title: newTitle,
+        content: newContent,
+        update_date: today,
+      });
+    yield put(
+      editNoteSuccess({
+        ...note,
+        title: newTitle,
+        content: newContent,
+        update_date: today,
+      })
+    );
+  } catch (error) {
+    yield put(editNoteFailure(error.message));
+  }
+}
+
 export function* fetchNotesStart() {
   yield takeLatest(NotesActionTypes.FETCH_NOTES_START, fetchNotesAsync);
 }
@@ -163,11 +201,16 @@ export function* updateNoteStart() {
   yield takeLatest(NotesActionTypes.UPDATE_NOTE_REQUEST, updateNoteAsync);
 }
 
+export function* editNoteStart() {
+  yield takeLatest(NotesActionTypes.EDIT_NOTE_REQUEST, editNoteAsync);
+}
+
 export function* notesSagas() {
   yield all([
     call(fetchNotesStart),
     call(addNoteStart),
     call(deleteNoteStart),
     call(updateNoteStart),
+    call(editNoteStart),
   ]);
 }
