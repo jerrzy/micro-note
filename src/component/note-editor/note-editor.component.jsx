@@ -30,7 +30,7 @@ const NoteEditor = ({
         type="text"
         name="title"
         defaultValue={title}
-        onChange={setTitle}
+        onChange={(event) => setTitle(event.target.value)}
       />
       <Form.Label className="m-2 font-weight-bold">New Content</Form.Label>
       <RichEditor contentHTML={contentHTML} onChange={setContentHTML} />
