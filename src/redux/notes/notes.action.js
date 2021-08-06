@@ -20,16 +20,17 @@ export const selectNote = (selectedNote) => ({
   payload: selectedNote,
 });
 
-export const addNoteStart = () => ({
-  type: NotesActionTypes.ADD_NOTE_START,
-});
-
-export const addNoteRequest = (selectedNoteCollectionId, title, content) => ({
+/**
+ * for new note, title is always "New Note", content is always "New Note Content"
+ * @param {*} selectedNoteCollectionId
+ * @returns
+ */
+export const addNoteRequest = (selectedNoteCollectionId) => ({
   type: NotesActionTypes.ADD_NOTE_REQUEST,
   payload: {
     selectedNoteCollectionId,
-    title,
-    content,
+    title: "New Note",
+    content: "Note Content goes here",
   },
 });
 
@@ -40,36 +41,6 @@ export const addNoteSuccess = (newNote) => ({
 
 export const addNoteFailure = (errorMessage) => ({
   type: NotesActionTypes.ADD_NOTE_FAILURE,
-  payload: errorMessage,
-});
-
-export const updateNoteStart = (note) => ({
-  type: NotesActionTypes.UPDATE_NOTE_START,
-  payload: note,
-});
-
-export const updateNoteRequest = (
-  noteCollectionId,
-  note,
-  newTitle,
-  newContent
-) => ({
-  type: NotesActionTypes.UPDATE_NOTE_REQUEST,
-  payload: {
-    noteCollectionId,
-    note,
-    newTitle,
-    newContent,
-  },
-});
-
-export const updateNoteSuccess = (newNote) => ({
-  type: NotesActionTypes.UPDATE_NOTE_SUCCESS,
-  payload: newNote,
-});
-
-export const updateNoteFailure = (errorMessage) => ({
-  type: NotesActionTypes.UPDATE_NOTE_FAILURE,
   payload: errorMessage,
 });
 

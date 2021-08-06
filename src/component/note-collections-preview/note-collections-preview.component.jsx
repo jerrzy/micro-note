@@ -17,10 +17,10 @@ import SelectableCard from "../card-view/selectable-card/selectable-card.compone
 import CardHeaderIconBar from "../card-view/card-header-icon-bar/card-header-icon-bar.component";
 
 class NoteCollectionsPreview extends React.Component {
-  handleSelection = (event) => {
-    const selectedNoteCollectionId = event.target.id;
+  handleSelection = (objectId) => {
+    // const selectedNoteCollectionId = event.target.id;
     const selectedNoteCollections = this.props.noteCollections.filter(
-      (noteCollection) => noteCollection.id === selectedNoteCollectionId
+      (noteCollection) => noteCollection.id === objectId
     );
     const selectedNoteCollection = selectedNoteCollections[0];
     const { selectNoteCollection, fetchNotesInCollection, history, match } =

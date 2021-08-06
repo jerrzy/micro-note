@@ -18,7 +18,7 @@ const SelectableCard = (props) => {
   return (
     <Card key={id} className="mb-2" bg={style.bg} text={style.text}>
       <Card.Header>
-        <TitleContainer id={id} onClick={handleSelect}>
+        <TitleContainer onClick={() => handleSelect(id)}>
           {title}
           {isPinned ? <PinIconContainer /> : null}
         </TitleContainer>

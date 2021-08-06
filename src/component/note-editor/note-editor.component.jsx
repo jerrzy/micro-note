@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { connect } from "react-redux";
 
-import RichEditor from "../card-view/richeditor/richeditor.component";
+import RichEditor from "../card-view/rich-editor/rich-editor.component";
 
 import { Form, Button } from "react-bootstrap";
 
 import { editNoteRequest, cancelNote } from "../../redux/notes/notes.action";
+
+import EmojiPicker from "../card-view/emoji/emoji-picker.component";
 
 const NoteEditor = ({
   selectedNoteCollection,
@@ -25,17 +27,21 @@ const NoteEditor = ({
         </Form.Text>
       ) : null}
       <Form.Label className="m-2 font-weight-bold">New Title</Form.Label>
-      <Form.Control
+      <RichEditor contentHTML={title} onChange={setTitle} />
+
+      {/* <Form.Control
         className="m-2"
         type="text"
         name="title"
         defaultValue={title}
         onChange={(event) => setTitle(event.target.value)}
-      />
+      /> */}
+      {/* <EmojiPicker></EmojiPicker> */}
       <Form.Label className="m-2 font-weight-bold">New Content</Form.Label>
       <RichEditor contentHTML={contentHTML} onChange={setContentHTML} />
       <Button
         className="m-2"
+        size="sm"
         variant="primary"
         onClick={() =>
           requestUpdateNote({
@@ -48,7 +54,7 @@ const NoteEditor = ({
       >
         Update
       </Button>
-      <Button className="m-2" onClick={() => cancelUpdateNote()}>
+      <Button className="m-2" size="sm" onClick={() => cancelUpdateNote()}>
         Cancel
       </Button>
     </Form>

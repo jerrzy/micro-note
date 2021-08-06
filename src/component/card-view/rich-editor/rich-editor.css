@@ -1,0 +1,13 @@
+.rdw-colorpicker-modal {
+  width: 250px !important;
+  height: 200px !important;
+}
+
+.rdw-colorpicker-modal-options {
+  overflow: auto !important;
+}
+
+.rdw-emoji-modal {
+  width: 400px !important;
+  height: 300px !important;
+}

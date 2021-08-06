@@ -6,15 +6,12 @@ import CardHeaderIconBar from "../card-view/card-header-icon-bar/card-header-ico
 
 import {
   deleteNoteRequest,
-  updateNoteStart,
   editNoteStart,
 } from "../../redux/notes/notes.action";
 
 import NoteEditor from "../note-editor/note-editor.component";
 
 import parse from "html-react-parser";
-
-// import NoteDetailBG from "../../assets/bg1.png";
 
 const NoteDetail = ({
   selectedNote,
@@ -26,7 +23,7 @@ const NoteDetail = ({
   return selectedNote ? (
     <Card key={selectedNote.id} className="mb-2">
       <Card.Header>
-        {selectedNote.title}
+        {parse(selectedNote.title)}
         <CardHeaderDatesTile
           createDate={selectedNote.createDate}
           updateDate={selectedNote.updateDate}
@@ -39,7 +36,7 @@ const NoteDetail = ({
         />
       </Card.Header>
       {isEditing ? (
-        <NoteEditor></NoteEditor>
+        <NoteEditor />
       ) : (
         <Card.Body>{parse(selectedNote.content)}</Card.Body>
       )}
@@ -58,7 +55,6 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   deleteNoteRequest: (selectedNoteCollection, selectedNoteId) =>
     dispatch(deleteNoteRequest(selectedNoteCollection, selectedNoteId)),
-  updateNoteStart: (note) => dispatch(updateNoteStart(note)),
   editNoteStart: () => dispatch(editNoteStart()),
 });
 

@@ -4,9 +4,6 @@ const INITIAL_STATE = {
   notes: [],
   selectedNote: null,
   isFetching: false,
-  isAdding: false,
-  isUpdating: false,
-  isDeleting: false,
   isEditing: false,
   errorMessage: "",
 };
@@ -28,16 +25,12 @@ export const NotesReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isFetching: false,
-        isAdding: false,
-        isUpdating: false,
         errorMessage: action.payload,
       };
     case NotesActionTypes.SELECT_NOTE:
       return {
         ...state,
         isFetching: false,
-        isAdding: false,
-        isUpdating: false,
         isEditing: false,
         selectedNote: action.payload,
       };
@@ -45,70 +38,19 @@ export const NotesReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isFetching: false,
-        isAdding: true,
-        isUpdating: false,
         errorMessage: action.payload,
-      };
-    case NotesActionTypes.UPDATE_NOTE_START:
-      return {
-        ...state,
-        isFetching: false,
-        isAdding: false,
-        isUpdating: true,
-        selectedNote: action.payload,
-      };
-    case NotesActionTypes.UPDATE_NOTE_REQUEST:
-      return {
-        ...state,
-        isFetching: false,
-        isAdding: false,
-        isUpdating: true,
-      };
-    case NotesActionTypes.UPDATE_NOTE_FAILURE:
-      return {
-        ...state,
-        isFetching: false,
-        isAdding: false,
-        isUpdating: true,
-        errorMessage: action.payload,
-      };
-    case NotesActionTypes.ADD_NOTE_START:
-      return {
-        ...state,
-        isFetching: false,
-        isAdding: true,
-        isUpdating: false,
       };
     case NotesActionTypes.ADD_NOTE_SUCCESS:
       return {
         ...state,
         isFetching: false,
-        isAdding: false,
-        isUpdating: false,
         notes: [...state.notes, action.payload],
-      };
-    case NotesActionTypes.UPDATE_NOTE_SUCCESS:
-      const updatedNotes = state.notes.map((note) => {
-        if (note.id === action.payload.id) {
-          return { ...action.payload };
-        } else {
-          return { ...note };
-        }
-      });
-      return {
-        ...state,
-        isFetching: false,
-        isAdding: false,
-        isUpdating: false,
-        notes: updatedNotes,
+        selectedNote: action.payload,
       };
     case NotesActionTypes.CANCEL_NOTE:
       return {
         ...state,
         isFetching: false,
-        isAdding: false,
-        isUpdating: false,
-        isDeleting: false,
         isEditing: false,
       };
     case NotesActionTypes.DELETE_NOTE_REQUEST:
@@ -128,9 +70,6 @@ export const NotesReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isFetching: false,
-        isAdding: false,
-        isUpdating: false,
-        isDeleting: true,
         errorMessage: action.payload,
       };
     case NotesActionTypes.EDIT_NOTE_START:
@@ -138,8 +77,6 @@ export const NotesReducer = (state = INITIAL_STATE, action) => {
         ...state,
         isFetching: false,
         isEditing: true,
-        isUpdating: false,
-        isDeleting: false,
         errorMessage: null,
       };
     case NotesActionTypes.EDIT_NOTE_REQUEST:
@@ -147,8 +84,6 @@ export const NotesReducer = (state = INITIAL_STATE, action) => {
         ...state,
         isFetching: false,
         isEditing: true,
-        isUpdating: false,
-        isDeleting: false,
         errorMessage: null,
       };
     case NotesActionTypes.EDIT_NOTE_SUCCESS:
@@ -169,8 +104,6 @@ export const NotesReducer = (state = INITIAL_STATE, action) => {
         ...state,
         isFetching: false,
         isEditing: false,
-        isUpdating: false,
-        isDeleting: false,
         errorMessage: null,
         notes: updatedNotesForEditing,
         selectedNote: updatedNote,
@@ -180,16 +113,12 @@ export const NotesReducer = (state = INITIAL_STATE, action) => {
         ...state,
         isFetching: false,
         isEditing: true,
-        isUpdating: false,
-        isDeleting: false,
         errorMessage: action.payload,
       };
     default:
       return {
         ...state,
         isFetching: false,
-        isAdding: false,
-        isUpdating: false,
         selectedNote: null,
         errorMessage: null,
       };

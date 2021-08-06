@@ -9,21 +9,20 @@ import {
 import { ReactComponent as Logo } from "../../assets/crown.svg";
 
 import NoteCollectionModal from "../note-collection-modal/note-collection-modal.component";
-import NoteModal from "../note-modal/note-modal.component";
 import { signOutStart } from "../../redux/user/user.actions";
 import {
   addNoteCollectionStart,
   editNoteCollectionStart,
 } from "../../redux/note-collection-crud/note-collection-crud.action";
 
-import { addNoteStart } from "../../redux/notes/notes.action";
+import { addNoteRequest } from "../../redux/notes/notes.action";
 
 const Header = ({
   currentUser,
   selectedNoteCollection,
   signOutStart,
   addNoteCollectionStart,
-  addNoteStart,
+  addNoteRequest,
 }) => {
   return (
     <HeaderContainer>
@@ -37,7 +36,11 @@ const Header = ({
           </OptionLink>
           {selectedNoteCollection ? (
             <>
-              <OptionLink onClick={addNoteStart}>New Note</OptionLink>
+              <OptionLink
+                onClick={() => addNoteRequest(selectedNoteCollection.id)}
+              >
+                New Note {String.fromCodePoint(0x1f354)}
+              </OptionLink>
             </>
           ) : null}
 
@@ -52,7 +55,6 @@ const Header = ({
         </OptionsContainer>
       )}
       <NoteCollectionModal />
-      <NoteModal />
     </HeaderContainer>
   );
 };
@@ -68,7 +70,8 @@ const mapDispatchToProps = (dispatch) => ({
   signOutStart: () => dispatch(signOutStart()),
   addNoteCollectionStart: () => dispatch(addNoteCollectionStart()),
   editNoteCollectionStart: () => dispatch(editNoteCollectionStart()),
-  addNoteStart: () => dispatch(addNoteStart()),
+  addNoteRequest: (selectedNoteCollectionId) =>
+    dispatch(addNoteRequest(selectedNoteCollectionId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

@@ -7,8 +7,6 @@ import {
   fetchNotesSuccess,
   addNoteFailure,
   addNoteSuccess,
-  updateNoteFailure,
-  updateNoteSuccess,
   deleteNoteFailure,
   deleteNoteSuccess,
   editNoteSuccess,
@@ -113,42 +111,6 @@ function* deleteNoteAsync({
   }
 }
 
-function* updateNoteAsync({
-  payload: { noteCollectionId, note, newTitle, newContent },
-}) {
-  try {
-    if (!note) {
-      yield put(deleteNoteFailure("Please select a Note to update"));
-      return;
-    }
-    if (note.title === newTitle && note.content === newContent) {
-      yield put(cancelNote());
-      return;
-    }
-    const today = new Date();
-    yield firestore
-      .collection("default")
-      .doc(`${noteCollectionId}`)
-      .collection("notes")
-      .doc(`${note.id}`)
-      .update({
-        title: newTitle,
-        content: newContent,
-        update_date: today,
-      });
-    yield put(
-      updateNoteSuccess({
-        ...note,
-        title: newTitle,
-        content: newContent,
-        update_date: today,
-      })
-    );
-  } catch (error) {
-    yield put(updateNoteFailure(error.message));
-  }
-}
-
 function* editNoteAsync({
   payload: { noteCollectionId, note, newTitle, newContent },
 }) {
@@ -197,10 +159,6 @@ export function* deleteNoteStart() {
   yield takeLatest(NotesActionTypes.DELETE_NOTE_REQUEST, deleteNoteAsync);
 }
 
-export function* updateNoteStart() {
-  yield takeLatest(NotesActionTypes.UPDATE_NOTE_REQUEST, updateNoteAsync);
-}
-
 export function* editNoteStart() {
   yield takeLatest(NotesActionTypes.EDIT_NOTE_REQUEST, editNoteAsync);
 }
@@ -210,7 +168,6 @@ export function* notesSagas() {
     call(fetchNotesStart),
     call(addNoteStart),
     call(deleteNoteStart),
-    call(updateNoteStart),
     call(editNoteStart),
   ]);
 }
