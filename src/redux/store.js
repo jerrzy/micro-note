@@ -17,12 +17,13 @@ if (process.env.NODE_ENV === "development") {
 export const store = createStore(
   rootReducer,
   {},
-  compose(
-    applyMiddleware(...middlewares),
-    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__()
-  )
+  process.env.NODE_ENV === "development"
+    ? compose(
+        applyMiddleware(...middlewares),
+        window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__()
+      )
+    : applyMiddleware(...middlewares)
 );
-// applyMiddleware(...middlewares));
 
 sagaMiddleware.run(rootSaga);
 
