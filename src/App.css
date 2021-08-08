@@ -1,14 +1,9 @@
 body {
   font-family: "Open Sans", Arial, Helvetica, sans-serif;
-  padding: 20px 40px;
-  font-size: 14px;
+  padding: 10px 10px;
+  font-size: 12px;
 }
 
 * {
   box-sizing: border-box;
-}
-
-.rdw-colorpicker-modal {
-  width: 175px;
-  height: 175px;
 }
