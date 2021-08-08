@@ -10,6 +10,9 @@ const sagaMiddleware = createSagaMiddleware();
 
 const middlewares = [sagaMiddleware];
 
+// force the ENV to staging for Heroku
+process.env.NODE_ENV = "staging";
+
 if (process.env.NODE_ENV === "development") {
   middlewares.push(logger);
 }
