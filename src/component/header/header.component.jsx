@@ -47,7 +47,8 @@ const Header = ({
           <OptionLink as="div" onClick={signOutStart}>
             Sign Out
           </OptionLink>
-          <span>Welcom {currentUser.display_name}</span>
+          <span className="mr-2">Welcom {currentUser.display_name}</span>
+          <span>[{process.env.NODE_ENV}]</span>
         </OptionsContainer>
       ) : (
         <OptionsContainer>

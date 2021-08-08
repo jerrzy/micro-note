@@ -9,19 +9,19 @@ export const NoteCollectionsContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin: 10px;
-  flex: 15%;
+  flex: 20%;
 `;
 
 export const NotesContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin: 10px;
-  flex: 15%;
+  flex: 20%;
 `;
 
 export const NoteDetailContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin: 10px;
-  flex: 70%;
+  flex: 60%;
 `;
